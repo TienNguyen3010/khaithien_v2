@@ -21,8 +21,28 @@ test("contains the complete public website structure", async () => {
     "app/not-found.tsx",
     "app/sitemap.ts",
     "app/robots.ts",
+    "app/admin/page.tsx",
+    "app/admin/admin-dashboard.tsx",
+    "app/api/admin/content/route.ts",
+    "app/api/admin/media/route.ts",
+    "app/api/admin/media/[id]/route.ts",
   ];
   await Promise.all(routes.map((route) => access(new URL(route, root))));
+});
+
+test("admin dashboard protects writes and supports D1/R2 content workflows", async () => {
+  const [authorization, contentApi, mediaApi, dashboard] = await Promise.all([
+    readFile(new URL("app/admin/authorization.ts", root), "utf8"),
+    readFile(new URL("app/api/admin/content/route.ts", root), "utf8"),
+    readFile(new URL("app/api/admin/media/route.ts", root), "utf8"),
+    readFile(new URL("app/admin/admin-dashboard.tsx", root), "utf8"),
+  ]);
+  assert.match(authorization, /getChatGPTUser/);
+  assert.match(authorization, /admin_user_roles/);
+  assert.match(contentApi, /activity_logs/);
+  assert.match(mediaApi, /MEDIA\.put/);
+  assert.match(dashboard, /Quản lý nội dung/);
+  assert.match(dashboard, /Hình ảnh và tài liệu/);
 });
 
 test("homepage and shared content use the approved Khai Thien messaging", async () => {

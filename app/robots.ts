@@ -1,2 +1,2 @@
 import type { MetadataRoute } from "next";
-export default function robots(): MetadataRoute.Robots { return { rules: { userAgent: "*", allow: "/", disallow: "/api/" }, sitemap: "https://khaithien.vn/sitemap.xml" }; }
+export default function robots(): MetadataRoute.Robots { return { rules: { userAgent: "*", allow: "/", disallow: ["/api/", "/admin"] }, sitemap: "https://khaithien.vn/sitemap.xml" }; }
