@@ -11,3 +11,7 @@ export function getDb() {
 
   return drizzle(env.DB, { schema });
 }
+
+export function getRuntimeBindings() {
+  return env as typeof env & { DB: D1Database; MEDIA?: R2Bucket };
+}

@@ -1,7 +1,9 @@
 # Cấu trúc dữ liệu website Khải Thiên
 
-Database sử dụng Cloudflare D1 (SQLite) và Drizzle ORM. File hình ảnh/video được
-lưu trong R2 binding `MEDIA`; bảng `media_assets` chỉ lưu metadata và khóa file.
+Database triển khai sử dụng Cloudflare D1 (SQLite) và Drizzle ORM; mô hình logic
+bám theo thiết kế PostgreSQL/Payload để có thể chuyển đổi ở giai đoạn vận hành
+lớn hơn. File hình ảnh/video/tài liệu được lưu trong R2 binding `MEDIA`; bảng
+`media_assets` chỉ lưu metadata và object key.
 
 ## Nhóm bảng
 
@@ -16,6 +18,12 @@ lưu trong R2 binding `MEDIA`; bảng `media_assets` chỉ lưu metadata và kh�
 | Cấu hình | `site_settings` | Thông tin liên hệ, mạng xã hội, SEO mặc định |
 | Quản trị | `admin_users`, `admin_roles`, `admin_user_roles` | Tài khoản quản trị và phân quyền |
 | Kiểm duyệt | `content_revisions`, `activity_logs` | Quy trình duyệt nội dung và lịch sử thao tác |
+| Song ngữ | `page_translations`, `service_translations`, `project_translations` | Nội dung VI/EN và SEO theo locale |
+| Taxonomy | `industries`, `article_categories`, `tags`, `article_tags` | Bộ lọc và phân loại có kiểm soát |
+| CRM-lite | `contacts`, `leads`, `project_briefs`, `lead_activities`, `lead_attributions` | Tách người liên hệ, cơ hội, brief và lịch sử xử lý |
+| Privacy | `consents` | Consent tách riêng theo mục đích và phiên bản chính sách |
+| SEO | `redirects` | Redirect có kiểm soát khi thay đổi URL |
+| RBAC | `admin_permissions`, `admin_role_permissions` | Quyền chi tiết theo `resource.action` |
 
 ## Quan hệ chính
 
@@ -24,13 +32,15 @@ lưu trong R2 binding `MEDIA`; bảng `media_assets` chỉ lưu metadata và kh�
 - Một `project` có nhiều hình ảnh qua `project_media`.
 - `media_assets` có thể làm ảnh đại diện cho dịch vụ, dự án, bài viết và logo khách hàng.
 - Một `client` có thể có nhiều `testimonials`.
-- Một `contact_submission` có thể liên kết với dịch vụ khách hàng quan tâm.
+- Một `contact` có thể tạo nhiều `leads`; mỗi lead có một `project_brief`, nhiều
+  hoạt động, attribution, consent và file đính kèm.
 - Người quản trị nhận nhiều vai trò qua `admin_user_roles`.
 - Mỗi lần chỉnh nội dung có thể lưu một bản duyệt trong `content_revisions`.
 
 ## Quy ước dữ liệu
 
-- ID nội bộ dùng số nguyên tự tăng; URL công khai dùng `slug` duy nhất.
+- Bảng nền tảng cũ dùng số nguyên; lớp nghiệp vụ mới dùng UUID dạng text để
+  đồng bộ an toàn giữa D1, CRM và PostgreSQL trong tương lai.
 - Thời gian được lưu dưới dạng Unix epoch milliseconds.
 - Nội dung có trạng thái `draft`, `published` hoặc `archived`.
 - Xóa trang/dự án sẽ xóa các bản ghi liên kết; xóa media chỉ đặt liên kết ảnh về `NULL`.

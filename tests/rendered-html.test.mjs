@@ -37,7 +37,7 @@ test("homepage and shared content use the approved Khai Thien messaging", async 
   assert.match(content, /Creative & Production/);
   assert.match(content, /Event Management/);
   assert.match(layout, /application\/ld\+json/);
-  assert.match(worker, /landing\.html/);
+  assert.match(worker, /vinext\/server\/app-router-entry/);
 });
 
 test("contact workflow writes to D1 and declares required fields", async () => {
@@ -45,9 +45,15 @@ test("contact workflow writes to D1 and declares required fields", async () => {
     readFile(new URL("app/api/contact/route.ts", root), "utf8"),
     readFile(new URL("db/schema.ts", root), "utf8"),
   ]);
-  assert.match(route, /contactSubmissions/);
+  assert.match(route, /INSERT INTO contacts/);
+  assert.match(route, /INSERT INTO leads/);
+  assert.match(route, /INSERT INTO project_briefs/);
+  assert.match(route, /INSERT INTO consents/);
+  assert.match(route, /MEDIA\.put/);
   assert.match(route, /serviceInterest/);
   assert.match(route, /budgetRange/);
   assert.match(schema, /contentRevisions/);
   assert.match(schema, /adminUserRoles/);
+  assert.match(schema, /leadAttributions/);
+  assert.match(schema, /serviceTranslations/);
 });
