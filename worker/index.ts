@@ -1,6 +1,4 @@
 /** Cloudflare Worker entry point for the vinext-starter template. */
-import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
-import handler from "vinext/server/app-router-entry";
 
 interface Env {
   ASSETS: Fetcher;
@@ -30,6 +28,11 @@ const worker = {
     const url = new URL(request.url);
 
     if (url.pathname === "/_vinext/image") {
+      const {
+        handleImageOptimization,
+        DEFAULT_DEVICE_SIZES,
+        DEFAULT_IMAGE_SIZES,
+      } = await import("vinext/server/image-optimization");
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
       return handleImageOptimization(request, {
         fetchAsset: (path) => env.ASSETS.fetch(new Request(new URL(path, request.url))),
@@ -41,6 +44,7 @@ const worker = {
     }
 
     try {
+      const { default: handler } = await import("vinext/server/app-router-entry");
       return await handler.fetch(request, env, ctx);
     } catch (error) {
       if (url.searchParams.get("__khai_debug") === "1") {
