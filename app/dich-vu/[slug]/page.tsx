@@ -1,0 +1,17 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { projects, services } from "../../content";
+import { ContactBand, PageHero, SectionHeading, SiteFrame } from "../../components/site-shell";
+
+export function generateStaticParams() { return services.map((service) => ({ slug: service.slug })); }
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> { const { slug } = await params; const service = services.find((item) => item.slug === slug); return service ? { title: service.name, description: service.short } : {}; }
+
+export default async function ServiceDetail({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params; const service = services.find((item) => item.slug === slug); if (!service) notFound();
+  return <SiteFrame><PageHero eyebrow={`Dịch vụ ${service.number}`} title={service.name} description={service.short} /><section className="section container editorial-grid"><div><p className="eyebrow">Bài toán</p><h2>Từ mục tiêu đến một giải pháp có thể thực thi.</h2></div><div><p className="large-copy">{service.description}</p><p>Mỗi phạm vi công việc được xác nhận theo mục tiêu, nguồn lực, thời gian và yêu cầu thực tế của dự án.</p></div></section>
+    <section className="section section-dark"><div className="container"><SectionHeading light eyebrow="Hạng mục" title="Năng lực có thể kết hợp linh hoạt." /><div className="deliverable-grid">{service.deliverables.map((item, index) => <article key={item}><span>{String(index + 1).padStart(2, "0")}</span><h3>{item}</h3></article>)}</div></div></section>
+    <section className="section container"><SectionHeading eyebrow="Quy trình" title="Bốn bước để giữ dự án đúng hướng." /><div className="process-grid">{service.process.map((item, index) => <article key={item}><span>{String(index + 1).padStart(2, "0")}</span><i/><h3>{item}</h3><p>Mốc công việc và người phụ trách được thống nhất trước khi chuyển bước.</p></article>)}</div></section>
+    <section className="section section-ice"><div className="container"><SectionHeading eyebrow="Hồ sơ liên quan" title="Năng lực được trình bày minh bạch." /><div className="simple-cards">{projects.filter((p) => p.category.includes(service.name.split(" ")[0]) || service.slug === "pr-communication").slice(0,2).map((project) => <Link href={`/du-an/${project.slug}`} key={project.slug}><span>{project.category}</span><h3>{project.title}</h3><p>{project.summary}</p></Link>)}</div></div></section>
+    <section className="section container"><SectionHeading eyebrow="Câu hỏi thường gặp" title="Thông tin cần biết trước khi bắt đầu." /><div className="faq-list">{service.faq.map((item) => <details key={item.question}><summary>{item.question}</summary><p>{item.answer}</p></details>)}</div></section><ContactBand /></SiteFrame>;
+}

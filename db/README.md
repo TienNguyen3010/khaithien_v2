@@ -14,6 +14,8 @@ lưu trong R2 binding `MEDIA`; bảng `media_assets` chỉ lưu metadata và kh�
 | Uy tín thương hiệu | `clients`, `testimonials` | Logo khách hàng/đối tác và đánh giá |
 | Kinh doanh | `contact_submissions` | Lead từ biểu mẫu liên hệ và trạng thái xử lý |
 | Cấu hình | `site_settings` | Thông tin liên hệ, mạng xã hội, SEO mặc định |
+| Quản trị | `admin_users`, `admin_roles`, `admin_user_roles` | Tài khoản quản trị và phân quyền |
+| Kiểm duyệt | `content_revisions`, `activity_logs` | Quy trình duyệt nội dung và lịch sử thao tác |
 
 ## Quan hệ chính
 
@@ -23,6 +25,8 @@ lưu trong R2 binding `MEDIA`; bảng `media_assets` chỉ lưu metadata và kh�
 - `media_assets` có thể làm ảnh đại diện cho dịch vụ, dự án, bài viết và logo khách hàng.
 - Một `client` có thể có nhiều `testimonials`.
 - Một `contact_submission` có thể liên kết với dịch vụ khách hàng quan tâm.
+- Người quản trị nhận nhiều vai trò qua `admin_user_roles`.
+- Mỗi lần chỉnh nội dung có thể lưu một bản duyệt trong `content_revisions`.
 
 ## Quy ước dữ liệu
 

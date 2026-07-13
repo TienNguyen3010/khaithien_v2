@@ -9,6 +9,13 @@ Website giới thiệu Khải Thiên Communication & Entertainment với các d�
 
 Website công khai: <https://tiennguyen3010.github.io/khaithien/>
 
+## Phiên bản thiết kế mới
+
+Nhánh `codex/website-redesign-v2` chứa phiên bản đa trang được xây dựng theo
+`desgin_web.md`. Phiên bản này độc lập với `main`, gồm các route giới thiệu,
+dịch vụ, dự án, khách hàng, tin tức, liên hệ, chính sách bảo mật và API lưu yêu
+cầu vào D1.
+
 ## Cấu trúc dự án
 
 - `index.html`: bản website tĩnh được GitHub Pages phục vụ trực tiếp.
@@ -18,6 +25,7 @@ Website công khai: <https://tiennguyen3010.github.io/khaithien/>
 - `worker/`: entry point cho Cloudflare Worker/vinext.
 - `db/`, `drizzle/`: cấu hình và schema cơ sở dữ liệu.
 - `tests/`: kiểm tra HTML render.
+- `desgin_web.md`: tài liệu cấu trúc nội dung và định hướng thiết kế mới.
 - `examples/`: ví dụ tích hợp D1.
 - `build/`: plugin build dành cho Sites/vinext.
 

@@ -29,13 +29,6 @@ const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
-    // The marketing homepage is intentionally served as a static asset. This
-    // keeps the public entry point independent from RSC content negotiation and
-    // gives every browser the same cacheable response.
-    if (url.pathname === "/" || url.pathname === "/index.html") {
-      return env.ASSETS.fetch(new Request(new URL("/landing.html", request.url), request));
-    }
-
     if (url.pathname === "/_vinext/image") {
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
       return handleImageOptimization(request, {

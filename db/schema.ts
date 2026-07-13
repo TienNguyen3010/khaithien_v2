@@ -55,7 +55,7 @@ export const pages = sqliteTable(
     title: text("title").notNull(),
     metaTitle: text("meta_title"),
     metaDescription: text("meta_description"),
-    status: text("status", { enum: ["draft", "published", "archived"] })
+    status: text("status", { enum: ["draft", "review", "published", "archived"] })
       .notNull()
       .default("draft"),
     createdAt: createdAt(),
@@ -115,7 +115,7 @@ export const services = sqliteTable(
       onDelete: "set null",
     }),
     displayOrder: integer("display_order").notNull().default(0),
-    status: text("status", { enum: ["draft", "published", "archived"] })
+    status: text("status", { enum: ["draft", "review", "published", "archived"] })
       .notNull()
       .default("draft"),
     createdAt: createdAt(),
@@ -144,7 +144,7 @@ export const projects = sqliteTable(
     isFeatured: integer("is_featured", { mode: "boolean" })
       .notNull()
       .default(false),
-    status: text("status", { enum: ["draft", "published", "archived"] })
+    status: text("status", { enum: ["draft", "review", "published", "archived"] })
       .notNull()
       .default("draft"),
     publishedAt: integer("published_at", { mode: "timestamp_ms" }),
@@ -254,7 +254,7 @@ export const posts = sqliteTable(
     coverMediaId: integer("cover_media_id").references(() => mediaAssets.id, {
       onDelete: "set null",
     }),
-    status: text("status", { enum: ["draft", "published", "archived"] })
+    status: text("status", { enum: ["draft", "review", "published", "archived"] })
       .notNull()
       .default("draft"),
     publishedAt: integer("published_at", { mode: "timestamp_ms" }),
@@ -279,6 +279,9 @@ export const contactSubmissions = sqliteTable(
     serviceId: integer("service_id").references(() => services.id, {
       onDelete: "set null",
     }),
+    serviceInterest: text("service_interest"),
+    plannedStart: text("planned_start"),
+    budgetRange: text("budget_range"),
     message: text("message").notNull(),
     consent: integer("consent", { mode: "boolean" })
       .notNull()
@@ -290,6 +293,7 @@ export const contactSubmissions = sqliteTable(
       .notNull()
       .default("new"),
     respondedAt: integer("responded_at", { mode: "timestamp_ms" }),
+    assignedTo: integer("assigned_to"),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -299,6 +303,7 @@ export const contactSubmissions = sqliteTable(
       table.createdAt
     ),
     index("contact_submissions_service_idx").on(table.serviceId),
+    index("contact_submissions_assigned_idx").on(table.assignedTo),
   ]
 );
 
@@ -313,4 +318,99 @@ export const siteSettings = sqliteTable(
     updatedAt: updatedAt(),
   },
   (table) => [index("site_settings_group_idx").on(table.group)]
+);
+
+/** Accounts for the future content-management area. Authentication stays external. */
+export const adminUsers = sqliteTable(
+  "admin_users",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    email: text("email").notNull(),
+    displayName: text("display_name").notNull(),
+    status: text("status", { enum: ["invited", "active", "suspended"] })
+      .notNull()
+      .default("invited"),
+    lastLoginAt: integer("last_login_at", { mode: "timestamp_ms" }),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (table) => [
+    uniqueIndex("admin_users_email_uidx").on(table.email),
+    index("admin_users_status_idx").on(table.status),
+  ]
+);
+
+export const adminRoles = sqliteTable(
+  "admin_roles",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    key: text("key").notNull(),
+    name: text("name").notNull(),
+    description: text("description"),
+    createdAt: createdAt(),
+  },
+  (table) => [uniqueIndex("admin_roles_key_uidx").on(table.key)]
+);
+
+export const adminUserRoles = sqliteTable(
+  "admin_user_roles",
+  {
+    userId: integer("user_id")
+      .notNull()
+      .references(() => adminUsers.id, { onDelete: "cascade" }),
+    roleId: integer("role_id")
+      .notNull()
+      .references(() => adminRoles.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    primaryKey({ columns: [table.userId, table.roleId] }),
+    index("admin_user_roles_role_idx").on(table.roleId),
+  ]
+);
+
+/** Reviewable snapshots for page, service, project and post edits. */
+export const contentRevisions = sqliteTable(
+  "content_revisions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    entityType: text("entity_type", {
+      enum: ["page", "page_section", "service", "project", "post", "setting"],
+    }).notNull(),
+    entityId: text("entity_id").notNull(),
+    snapshot: text("snapshot", { mode: "json" }).$type<unknown>().notNull(),
+    status: text("status", { enum: ["draft", "review", "approved", "rejected"] })
+      .notNull()
+      .default("draft"),
+    authorId: integer("author_id").references(() => adminUsers.id, {
+      onDelete: "set null",
+    }),
+    reviewerId: integer("reviewer_id").references(() => adminUsers.id, {
+      onDelete: "set null",
+    }),
+    note: text("note"),
+    createdAt: createdAt(),
+  },
+  (table) => [
+    index("content_revisions_entity_idx").on(table.entityType, table.entityId),
+    index("content_revisions_status_idx").on(table.status, table.createdAt),
+  ]
+);
+
+export const activityLogs = sqliteTable(
+  "activity_logs",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    adminUserId: integer("admin_user_id").references(() => adminUsers.id, {
+      onDelete: "set null",
+    }),
+    action: text("action").notNull(),
+    entityType: text("entity_type"),
+    entityId: text("entity_id"),
+    payload: text("payload", { mode: "json" }).$type<unknown>(),
+    createdAt: createdAt(),
+  },
+  (table) => [
+    index("activity_logs_user_created_idx").on(table.adminUserId, table.createdAt),
+    index("activity_logs_entity_idx").on(table.entityType, table.entityId),
+  ]
 );

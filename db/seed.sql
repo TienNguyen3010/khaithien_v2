@@ -13,3 +13,9 @@ VALUES
   ('contact.email', json('"khaithienmande@gmail.com"'), 'contact', 'Email liên hệ'),
   ('contact.location', json('"Thủ Đức, TP. Hồ Chí Minh"'), 'contact', 'Khu vực hoạt động'),
   ('social.facebook', json('"https://www.facebook.com/profile.php?id=100082810012676"'), 'social', 'Facebook fanpage');
+
+INSERT OR IGNORE INTO admin_roles ("key", name, description)
+VALUES
+  ('owner', 'Chủ sở hữu', 'Toàn quyền cấu hình, nội dung và phân quyền.'),
+  ('editor', 'Biên tập viên', 'Tạo, sửa và gửi nội dung chờ duyệt.'),
+  ('sales', 'Kinh doanh', 'Tiếp nhận và cập nhật yêu cầu liên hệ.');
