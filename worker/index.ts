@@ -40,7 +40,18 @@ const worker = {
       }, allowedWidths);
     }
 
-    return handler.fetch(request, env, ctx);
+    try {
+      return await handler.fetch(request, env, ctx);
+    } catch (error) {
+      if (url.searchParams.get("__khai_debug") === "1") {
+        const details = error instanceof Error ? error.stack ?? error.message : String(error);
+        return new Response(details, {
+          status: 200,
+          headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
+        });
+      }
+      throw error;
+    }
   },
 };
 
