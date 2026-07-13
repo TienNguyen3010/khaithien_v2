@@ -63,7 +63,7 @@ export function AdminDashboard({ adminName, initialStats }: { adminName: string;
       <a href="/" target="_blank">Xem website ↗</a>
     </aside>
     <main className="admin-main">
-      <header className="admin-top"><div><span>Quản trị website</span><strong>{adminName}</strong></div><a href="/signout-with-chatgpt?return_to=/">Đăng xuất</a></header>
+      <header className="admin-top"><div><span>Quản trị website · Sites owner-only</span><strong>{adminName}</strong></div><a href="/">Về website</a></header>
       {notice && <div className="admin-notice" role="status">{notice}<button onClick={() => setNotice("")} aria-label="Đóng">×</button></div>}
 
       {active === "overview" && <section>

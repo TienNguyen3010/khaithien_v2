@@ -40,6 +40,8 @@ test("admin dashboard protects writes and supports D1/R2 content workflows", asy
     readFile(new URL("app/admin/admin-dashboard.tsx", root), "utf8"),
   ]);
   assert.match(authorization, /getChatGPTUser/);
+  assert.match(authorization, /sites-owner@local/);
+  assert.match(authorization, /CREATE TABLE IF NOT EXISTS admin_users/);
   assert.match(authorization, /admin_user_roles/);
   assert.match(contentApi, /activity_logs/);
   assert.match(mediaApi, /MEDIA\.put/);
