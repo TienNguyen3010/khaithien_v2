@@ -1,15 +1,6 @@
-/** Cloudflare Worker entry point for the vinext-starter template. */
-
 interface Env {
   ASSETS: Fetcher;
   DB: D1Database;
-  IMAGES: {
-    input(stream: ReadableStream): {
-      transform(options: Record<string, unknown>): {
-        output(options: { format: string; quality: number }): Promise<{ response(): Response }>;
-      };
-    };
-  };
 }
 
 interface ExecutionContext {
@@ -17,46 +8,85 @@ interface ExecutionContext {
   passThroughOnException(): void;
 }
 
-// Image security config. SVG sources with .svg extension auto-skip the
-// optimization endpoint on the client side (served directly, no proxy).
-// To route SVGs through the optimizer (with security headers), set
-// dangerouslyAllowSVG: true in next.config.js and uncomment below:
-// const imageConfig: ImageConfig = { dangerouslyAllowSVG: true };
+const assetPaths = new Set([
+  "/landing.html",
+  "/kt-logo.jpg",
+  "/kt-landpage.png",
+  "/og.png",
+  "/favicon.svg",
+]);
 
-const worker = {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+function text(value: unknown, max: number) {
+  return typeof value === "string" ? value.trim().slice(0, max) : "";
+}
+
+async function saveContact(request: Request, env: Env) {
+  try {
+    const data = (await request.json()) as Record<string, unknown>;
+    const name = text(data.name, 120);
+    const phone = text(data.phone, 40);
+    const message = text(data.message, 4000);
+    const consent = data.consent === true || data.consent === "true";
+
+    if (!name || !phone || !message || !consent) {
+      return Response.json({ ok: false, error: "invalid_request" }, { status: 400 });
+    }
+
+    await env.DB.prepare(`CREATE TABLE IF NOT EXISTS contact_submissions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      company TEXT,
+      email TEXT,
+      phone TEXT NOT NULL,
+      service_interest TEXT,
+      planned_start TEXT,
+      budget_range TEXT,
+      message TEXT NOT NULL,
+      consent INTEGER NOT NULL DEFAULT 0,
+      source TEXT NOT NULL DEFAULT 'website-v2',
+      status TEXT NOT NULL DEFAULT 'new',
+      created_at INTEGER NOT NULL DEFAULT (unixepoch() * 1000),
+      updated_at INTEGER NOT NULL DEFAULT (unixepoch() * 1000)
+    )`).run();
+
+    await env.DB.prepare(`INSERT INTO contact_submissions
+      (name, company, email, phone, service_interest, planned_start, budget_range, message, consent, source, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, 'website-v2', 'new')`)
+      .bind(
+        name,
+        text(data.company, 160) || null,
+        text(data.email, 160) || null,
+        phone,
+        text(data.serviceInterest, 80) || null,
+        text(data.plannedStart, 80) || null,
+        text(data.budgetRange, 80) || null,
+        message,
+      )
+      .run();
+
+    return Response.json({ ok: true }, { status: 201 });
+  } catch {
+    return Response.json({ ok: false, error: "service_unavailable" }, { status: 503 });
+  }
+}
+
+export default {
+  async fetch(request: Request, env: Env, _ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
-    if (url.pathname === "/_vinext/image") {
-      const {
-        handleImageOptimization,
-        DEFAULT_DEVICE_SIZES,
-        DEFAULT_IMAGE_SIZES,
-      } = await import("vinext/server/image-optimization");
-      const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
-      return handleImageOptimization(request, {
-        fetchAsset: (path) => env.ASSETS.fetch(new Request(new URL(path, request.url))),
-        transformImage: async (body, { width, format, quality }) => {
-          const result = await env.IMAGES.input(body).transform(width > 0 ? { width } : {}).output({ format, quality });
-          return result.response();
-        },
-      }, allowedWidths);
+    if (url.pathname === "/api/contact" && request.method === "POST") {
+      return saveContact(request, env);
     }
 
-    try {
-      const { default: handler } = await import("vinext/server/app-router-entry");
-      return await handler.fetch(request, env, ctx);
-    } catch (error) {
-      if (url.searchParams.get("__khai_debug") === "1") {
-        const details = error instanceof Error ? error.stack ?? error.message : String(error);
-        return new Response(details, {
-          status: 200,
-          headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
-        });
-      }
-      throw error;
+    if (assetPaths.has(url.pathname) || url.pathname.startsWith("/assets/")) {
+      return env.ASSETS.fetch(request);
     }
+
+    if (request.method === "GET" || request.method === "HEAD") {
+      const landingUrl = new URL("/landing.html", request.url);
+      return env.ASSETS.fetch(new Request(landingUrl, request));
+    }
+
+    return new Response("Method Not Allowed", { status: 405 });
   },
 };
-
-export default worker;
