@@ -83,6 +83,7 @@ export function AdminDashboard({ adminName, initialStats }: { adminName: string;
         <div className="admin-content-layout">
           <form className="admin-editor" onSubmit={saveContent} key={`${contentType}-${editing?.id || "new"}`}>
             <h2>{editing ? `Chỉnh sửa ${labels[contentType].toLowerCase()}` : `Thêm ${labels[contentType].toLowerCase()}`}</h2>
+            <p className="admin-editor-note">Nội dung ở trạng thái “Xuất bản” sẽ xuất hiện tại danh mục tương ứng trên website.</p>
             <label>Tiêu đề / Tên *<input name="title" required defaultValue={editing?.title || ""}/></label>
             <label>Slug *<input name="slug" required pattern="[a-z0-9-]+" placeholder="ten-noi-dung" defaultValue={editing?.slug || ""}/></label>
             <label>Mô tả ngắn<textarea name="summary" rows={3} defaultValue={editing?.summary || ""}/></label>

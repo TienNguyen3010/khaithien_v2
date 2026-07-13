@@ -26,6 +26,8 @@ test("contains the complete public website structure", async () => {
     "app/api/admin/content/route.ts",
     "app/api/admin/media/route.ts",
     "app/api/admin/media/[id]/route.ts",
+    "app/api/media/[id]/route.ts",
+    "app/public-content.ts",
   ];
   await Promise.all(routes.map((route) => access(new URL(route, root))));
 });
@@ -43,6 +45,7 @@ test("admin dashboard protects writes and supports D1/R2 content workflows", asy
   assert.match(mediaApi, /MEDIA\.put/);
   assert.match(dashboard, /Quản lý nội dung/);
   assert.match(dashboard, /Hình ảnh và tài liệu/);
+  assert.match(dashboard, /Xuất bản/);
 });
 
 test("homepage and shared content use the approved Khai Thien messaging", async () => {
