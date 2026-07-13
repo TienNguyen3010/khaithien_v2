@@ -1,0 +1,6 @@
+import type { Metadata } from "next";
+import { PageHero, SiteFrame } from "../components/site-shell";
+
+export const metadata: Metadata = { title: "Điều khoản sử dụng", description: "Điều khoản sử dụng website và nội dung Khải Thiên." };
+
+export default function TermsPage() { return <SiteFrame><PageHero eyebrow="Pháp lý" title="Điều khoản sử dụng website." description="Các nguyên tắc áp dụng khi truy cập và sử dụng thông tin trên website Khải Thiên."/><article className="legal container"><section><h2>1. Phạm vi nội dung</h2><p>Website cung cấp thông tin giới thiệu về Khải Thiên, dịch vụ, dự án và nội dung chuyên môn. Thông tin có thể được cập nhật theo từng thời điểm.</p></section><section><h2>2. Quyền sở hữu</h2><p>Logo, nội dung, hình ảnh và tài liệu thuộc quyền của Khải Thiên hoặc bên cấp quyền tương ứng. Không sao chép hoặc sử dụng thương mại khi chưa có chấp thuận.</p></section><section><h2>3. Thông tin dự án</h2><p>Tên khách hàng, hình ảnh, nhận xét và số liệu chỉ được công bố trong phạm vi được phép. Một số nội dung có thể được ẩn danh để tuân thủ NDA.</p></section><section><h2>4. Liên hệ</h2><p>Việc gửi biểu mẫu không tự động hình thành hợp đồng hoặc cam kết cung cấp dịch vụ. Phạm vi hợp tác chỉ được xác lập bằng thỏa thuận riêng.</p></section></article></SiteFrame>; }

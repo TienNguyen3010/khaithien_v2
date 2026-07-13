@@ -12,11 +12,12 @@ test("contains the complete public website structure", async () => {
     "app/dich-vu/[slug]/page.tsx",
     "app/du-an/page.tsx",
     "app/du-an/[slug]/page.tsx",
-    "app/khach-hang/page.tsx",
-    "app/tin-tuc/page.tsx",
-    "app/tin-tuc/[slug]/page.tsx",
+    "app/insights/page.tsx",
+    "app/insights/[slug]/page.tsx",
     "app/lien-he/page.tsx",
+    "app/gui-brief/page.tsx",
     "app/chinh-sach-bao-mat/page.tsx",
+    "app/dieu-khoan-su-dung/page.tsx",
     "app/not-found.tsx",
     "app/sitemap.ts",
     "app/robots.ts",
@@ -32,10 +33,11 @@ test("homepage and shared content use the approved Khai Thien messaging", async 
     readFile(new URL("worker/index.ts", root), "utf8"),
   ]);
   assert.match(home, /Kiến tạo sự kiện/);
-  assert.match(content, /PR & Communication/);
-  assert.match(content, /Production House/);
+  assert.match(content, /PR & Integrated Communication/);
+  assert.match(content, /Creative & Production/);
+  assert.match(content, /Event Management/);
   assert.match(layout, /application\/ld\+json/);
-  assert.doesNotMatch(worker, /landing\.html/);
+  assert.match(worker, /landing\.html/);
 });
 
 test("contact workflow writes to D1 and declares required fields", async () => {

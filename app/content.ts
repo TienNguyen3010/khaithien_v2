@@ -13,8 +13,8 @@ export const navigation = [
   { href: "/gioi-thieu", label: "Giới thiệu" },
   { href: "/dich-vu", label: "Dịch vụ" },
   { href: "/du-an", label: "Dự án" },
-  { href: "/tin-tuc", label: "Tin tức" },
-  { href: "/khach-hang", label: "Khách hàng" },
+  { href: "/insights", label: "Insights" },
+  { href: "/lien-he", label: "Liên hệ" },
 ];
 
 export type Service = {
@@ -32,8 +32,8 @@ export const services: Service[] = [
   {
     slug: "pr-communication",
     number: "01",
-    name: "PR & Communication",
-    short: "Chiến lược, nội dung và PR cùng vận hành trong một hệ thống truyền thông thống nhất.",
+    name: "PR & Integrated Communication",
+    short: "Kết nối chiến lược, nội dung, báo chí và chiến dịch trong một hệ thống truyền thông nhất quán.",
     description: "Khải Thiên bắt đầu từ mục tiêu kinh doanh và chân dung công chúng để xây dựng thông điệp, kế hoạch nội dung và lộ trình truyền thông có thể triển khai thực tế.",
     deliverables: ["Tư vấn chiến lược truyền thông", "Thông điệp và định hướng nội dung", "Quan hệ báo chí và PR", "Kế hoạch social content", "Quản lý chiến dịch tích hợp"],
     process: ["Phân tích bối cảnh", "Xác lập thông điệp", "Thiết kế kế hoạch", "Triển khai và đo lường"],
@@ -45,8 +45,8 @@ export const services: Service[] = [
   {
     slug: "event",
     number: "02",
-    name: "Event",
-    short: "Thiết kế và vận hành sự kiện trọn gói từ ý tưởng đến trải nghiệm tại hiện trường.",
+    name: "Event Management",
+    short: "Tổ chức sự kiện doanh nghiệp và thương hiệu từ mục tiêu, concept đến vận hành tại hiện trường.",
     description: "Mỗi sự kiện được phát triển như một hành trình thương hiệu, nơi nội dung, không gian, kỹ thuật và vận hành cùng phục vụ một mục tiêu chung.",
     deliverables: ["Concept và kịch bản", "Thiết kế không gian", "Sản xuất sân khấu", "Âm thanh, ánh sáng và trình chiếu", "Điều phối và vận hành"],
     process: ["Tiếp nhận brief", "Phát triển concept", "Tiền kỳ và sản xuất", "Vận hành và nghiệm thu"],
@@ -58,8 +58,8 @@ export const services: Service[] = [
   {
     slug: "production-house",
     number: "03",
-    name: "Production House",
-    short: "Sản xuất nội dung hình ảnh và video có định hướng, nhất quán và phù hợp từng nền tảng.",
+    name: "Creative & Production",
+    short: "Phát triển concept, thiết kế không gian và sản xuất hình ảnh, video, kỹ thuật theo một định hướng chung.",
     description: "Từ tiền kỳ đến hậu kỳ, đội ngũ kiểm soát mạch kể chuyện, hình ảnh và chất lượng bàn giao để nội dung thực sự hỗ trợ mục tiêu truyền thông.",
     deliverables: ["TVC và phim doanh nghiệp", "Social video", "Chụp ảnh thương hiệu", "Livestream", "Hậu kỳ và phiên bản đa nền tảng"],
     process: ["Xây dựng treatment", "Tiền kỳ", "Sản xuất", "Hậu kỳ và bàn giao"],
@@ -71,8 +71,8 @@ export const services: Service[] = [
   {
     slug: "activation",
     number: "04",
-    name: "Activation",
-    short: "Tạo điểm chạm trực tiếp giúp thương hiệu thu hút, tương tác và được ghi nhớ.",
+    name: "Brand Activation",
+    short: "Thiết kế điểm chạm trực tiếp giúp thương hiệu thu hút, tương tác và được ghi nhớ.",
     description: "Hoạt động kích hoạt được thiết kế quanh hành vi người tham dự, bảo đảm ý tưởng vừa nổi bật vừa có khả năng vận hành tại địa điểm thực tế.",
     deliverables: ["Roadshow và sampling", "Booth trải nghiệm", "Brand activation", "Game tương tác", "Nhân sự và vận hành điểm chạm"],
     process: ["Xác định hành vi", "Thiết kế trải nghiệm", "Sản xuất vật phẩm", "Vận hành và tổng kết"],
@@ -172,8 +172,20 @@ export const posts: Post[] = [
 ];
 
 export const processSteps = [
-  { no: "01", title: "Lắng nghe", text: "Hiểu mục tiêu, đối tượng, bối cảnh và giới hạn của dự án." },
-  { no: "02", title: "Kiến tạo", text: "Chuyển brief thành chiến lược, ý tưởng và kế hoạch khả thi." },
-  { no: "03", title: "Thực thi", text: "Sản xuất, vận hành và kiểm soát chất lượng xuyên suốt." },
-  { no: "04", title: "Lan tỏa", text: "Bàn giao, tổng kết và đo lường theo tiêu chí đã thống nhất." },
+  { no: "01", title: "Tiếp nhận brief", text: "Làm rõ nhu cầu, phạm vi ban đầu và đầu mối phối hợp." },
+  { no: "02", title: "Discovery", text: "Xác định mục tiêu, đối tượng, bối cảnh và tiêu chí đánh giá." },
+  { no: "03", title: "Phát triển concept", text: "Chuyển insight thành ý tưởng, trải nghiệm và đề xuất khả thi." },
+  { no: "04", title: "Lập kế hoạch", text: "Khóa phạm vi, tiến độ, ngân sách, kỹ thuật và phương án rủi ro." },
+  { no: "05", title: "Sản xuất & vận hành", text: "Điều phối các hạng mục và kiểm soát chất lượng tại hiện trường." },
+  { no: "06", title: "Báo cáo & đánh giá", text: "Tổng kết đầu ra, phản hồi và kết quả theo tiêu chí thống nhất." },
 ];
+
+export const valuePillars = [
+  { no: "01", title: "Strategic Thinking", text: "Mỗi đề xuất bắt đầu từ mục tiêu kinh doanh và truyền thông, không bắt đầu từ một hình thức có sẵn." },
+  { no: "02", title: "Creative Excellence", text: "Insight được chuyển thành concept, nội dung và trải nghiệm có thể triển khai thực tế." },
+  { no: "03", title: "Integrated Execution", text: "Sáng tạo, sản xuất, kỹ thuật và vận hành được kết nối qua một đầu mối xuyên suốt." },
+  { no: "04", title: "Reliable Delivery", text: "Phạm vi, tiến độ, chất lượng và rủi ro được làm rõ trước từng mốc quyết định." },
+  { no: "05", title: "Measurable Value", text: "Đầu ra và phương pháp đánh giá được thống nhất phù hợp với từng dự án." },
+];
+
+export const serviceSignals = ["Sự kiện doanh nghiệp", "Ra mắt thương hiệu", "Activation & roadshow", "Sản xuất nội dung"];

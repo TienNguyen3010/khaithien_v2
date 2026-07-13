@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://khaithien.vn"),
   title: { default: "Khải Thiên | Communication & Entertainment", template: "%s | Khải Thiên" },
-  description: "Giải pháp PR, sự kiện, sản xuất nội dung và activation tại TP. Hồ Chí Minh.",
+  description: "Đối tác Event & Integrated Communication từ chiến lược, ý tưởng sáng tạo đến sản xuất và vận hành tại TP. Hồ Chí Minh.",
   openGraph: { title: company.fullName, description: company.tagline, type: "website", locale: "vi_VN", images: [{ url: "/og.png", width: 1734, height: 907, alt: company.fullName }] },
   twitter: { card: "summary_large_image", title: company.fullName, description: company.tagline, images: ["/og.png"] },
 };

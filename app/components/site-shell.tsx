@@ -15,13 +15,13 @@ export function SiteHeader() {
         </Link>
         <nav className="desktop-nav" aria-label="Điều hướng chính">
           {navigation.map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}
-          <Link className="nav-button" href="/lien-he">Gửi yêu cầu</Link>
+          <Link className="nav-button" href="/gui-brief">Gửi brief</Link>
         </nav>
         <details className="mobile-nav">
           <summary>Menu</summary>
           <div>
             {navigation.map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}
-            <Link href="/lien-he">Gửi yêu cầu</Link>
+            <Link href="/gui-brief">Gửi brief dự án</Link>
           </div>
         </details>
       </header>
@@ -38,7 +38,7 @@ export function SiteFooter() {
       </div>
       <div><h3>Khám phá</h3>{navigation.map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}</div>
       <div><h3>Liên hệ</h3><a href={company.phoneHref}>{company.phone}</a><a href={`mailto:${company.email}`}>{company.email}</a><span>{company.location}</span></div>
-      <div><h3>Kết nối</h3><a href={company.facebook} target="_blank" rel="noreferrer">Facebook ↗</a><Link href="/chinh-sach-bao-mat">Chính sách bảo mật</Link></div>
+      <div><h3>Kết nối</h3><a href={company.facebook} target="_blank" rel="noreferrer">Facebook ↗</a><Link href="/chinh-sach-bao-mat">Chính sách bảo mật</Link><Link href="/dieu-khoan-su-dung">Điều khoản sử dụng</Link></div>
       <small>© 2026 Khải Thiên. Nội dung dự án chỉ được công bố khi có xác nhận sử dụng.</small>
     </footer>
   );
@@ -53,9 +53,9 @@ export function SectionHeading({ eyebrow, title, description, light = false }: {
 }
 
 export function ContactBand() {
-  return <section className="contact-band"><div><p className="eyebrow">Bắt đầu một dự án</p><h2>Có một ý tưởng đang chờ cất cánh?</h2></div><div><p>Chia sẻ mục tiêu của bạn. Khải Thiên sẽ liên hệ để cùng làm rõ nhu cầu và đề xuất bước tiếp theo phù hợp.</p><Link className="button button-light" href="/lien-he">Gửi yêu cầu ↗</Link></div></section>;
+  return <section className="contact-band"><div><p className="eyebrow">Bắt đầu một dự án</p><h2>Chia sẻ brief. Cùng xác định bước tiếp theo.</h2></div><div><p>Gửi mục tiêu, thời gian và phạm vi dự kiến. Khải Thiên sẽ tiếp nhận để làm rõ nhu cầu trước khi đề xuất giải pháp.</p><Link className="button button-light" href="/gui-brief">Gửi brief dự án ↗</Link><Link className="contact-link" href="/lien-he">Hoặc liên hệ trực tiếp</Link></div></section>;
 }
 
 export function SiteFrame({ children }: { children: React.ReactNode }) {
-  return <><SiteHeader /><main>{children}</main><SiteFooter /></>;
+  return <><a className="skip-link" href="#main-content">Bỏ qua điều hướng</a><SiteHeader /><main id="main-content">{children}</main><SiteFooter /><Link className="mobile-brief" href="/gui-brief">Gửi brief ↗</Link></>;
 }
